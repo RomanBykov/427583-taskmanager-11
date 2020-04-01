@@ -372,15 +372,15 @@ const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const siteMainElement = document.querySelector('.main');
-const siteHeaderElement = siteMainElement.querySelector('.main__control');
+const siteMainElement = document.querySelector(`.main`);
+const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
 render(siteHeaderElement, createSiteMenuTemplate());
 render(siteMainElement, createSiteFilterTemplate());
 render(siteMainElement, createSiteBoardTemplate());
 
-const siteBoardElement = siteMainElement.querySelector('.board');
-const siteBoardTasksElement = siteBoardElement.querySelector('.board__tasks');
+const siteBoardElement = siteMainElement.querySelector(`.board`);
+const siteBoardTasksElement = siteBoardElement.querySelector(`.board__tasks`);
 
 render(siteBoardTasksElement, createEditTaskTemplate());
 
