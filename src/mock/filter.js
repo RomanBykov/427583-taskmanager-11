@@ -18,6 +18,10 @@ const filterByArchive = (task) => {
   return task.isArchive;
 };
 
+const filterByRepeating = (task) => {
+  return Object.values(task.repeatingDays).some(Boolean);
+};
+
 const generateFilters = (tasks) => {
   const getCountByFilter = (filterFunc) => {
     return tasks.filter(filterFunc).length;
@@ -28,6 +32,7 @@ const generateFilters = (tasks) => {
     overdue: getCountByFilter(filterByOverdue),
     today: getCountByFilter(filterByToday),
     favorites: getCountByFilter(filterByFavorite),
+    repeating: getCountByFilter(filterByRepeating),
     archive: getCountByFilter(filterByArchive)
   };
 
