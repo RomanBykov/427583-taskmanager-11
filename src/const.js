@@ -22,7 +22,7 @@ export const MONTH_NAMES = [
 export const DefaultDescriptions = [
   `Изучить теорию`,
   `Сделать домашку`,
-  `Пройти интенсив на соточку`,
+  `Пройти интенсив на соточку`
 ];
 
 export const DefaultRepeatingDays = {

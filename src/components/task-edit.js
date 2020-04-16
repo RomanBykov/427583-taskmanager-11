@@ -1,5 +1,5 @@
-import {MONTH_NAMES, DAYS, COLORS} from "../const";
-import {formatTime} from "../util";
+import {DAYS, COLORS} from "../const";
+import {setFormatedTime, checkIfDateIsExpired, checkIfDateIsShowing, setFormatedDate, checkIfTaskIsRepeating, toggleRepeatClass, toggleDeadlineClass} from "../util";
 
 const createColorsMarkup = (colors, currentColor) => {
   return colors.map((color, index) => {
@@ -47,18 +47,18 @@ export const createEditTaskTemplate = (task) => {
 
   const taskColor = description === `` ? COLORS[0] : color;
 
-  const isExpired = dueDate instanceof Date && dueDate < Date.now();
-  const isDateShowing = description ? !!dueDate : false;
+  const isExpired = checkIfDateIsExpired(dueDate);
+  const isDateShowing = description ? checkIfDateIsShowing(dueDate) : false;
 
-  const date = isDateShowing ? `${dueDate.getDate()} ${MONTH_NAMES[dueDate.getMonth()]}` : ``;
-  const time = isDateShowing ? formatTime(dueDate) : ``;
+  const date = setFormatedDate(isDateShowing, dueDate);
+  const time = setFormatedTime(isDateShowing, dueDate);
 
   const repeatingDaysMarkup = createRepeatingDaysMarkup(DAYS, repeatingDays);
   const colorsMarkup = createColorsMarkup(COLORS, taskColor);
 
-  const isRepeatingTask = description ? Object.values(repeatingDays).some(Boolean) : false;
-  const repeatClass = isRepeatingTask ? `card--repeat` : ``;
-  const deadlineClass = isExpired ? `card--deadline` : ``;
+  const isRepeatingTask = checkIfTaskIsRepeating(description, repeatingDays);
+  const repeatClass = toggleRepeatClass(isRepeatingTask);
+  const deadlineClass = toggleDeadlineClass(isExpired);
 
   return (
     `<article class="card card--edit card--${taskColor} ${repeatClass} ${deadlineClass}">
