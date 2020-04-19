@@ -1,5 +1,5 @@
-import {DefaultRepeatingDays, DefaultDescriptions, COLORS} from "../const";
-import {getRandomArrayItem, getRandomIntInclusive, getRandomBoolean} from "../util";
+import {DefaultRepeatingDays, DefaultDescriptions, COLORS} from "../const.js";
+import {getRandomArrayItem, getRandomIntInclusive, getRandomBoolean} from "../utils.js";
 
 const getRandomDate = () => {
   const targetDate = new Date();
