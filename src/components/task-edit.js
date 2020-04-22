@@ -1,5 +1,6 @@
 import {DAYS, COLORS} from "../const.js";
-import {setFormatedTime, checkIfDateIsExpired, checkIfDateIsShowing, setFormatedDate, checkIfTaskIsRepeating, toggleRepeatClass, toggleDeadlineClass, createElement} from "../utils.js";
+import {setFormatedTime, checkIfDateIsExpired, checkIfDateIsShowing, setFormatedDate, checkIfTaskIsRepeating, toggleRepeatClass, toggleDeadlineClass} from "../utils/common.js";
+import AbstractComponent from "./abstract-component.js";
 
 const createColorsMarkup = (colors, currentColor) => {
   return colors.map((color, index) => {
@@ -133,25 +134,18 @@ const createTaskEditTemplate = (task) => {
   );
 };
 
-export default class TaskEdit {
+export default class TaskEdit extends AbstractComponent {
   constructor(task) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createTaskEditTemplate(this._task);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setSubmitHandler(handler) {
+    this.getElement().querySelector(`form`)
+      .addEventListener(`submit`, handler);
   }
 }

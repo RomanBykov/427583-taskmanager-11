@@ -1,9 +1,4 @@
-import {MONTH_NAMES} from "./const.js";
-
-export const RenderPosition = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
-};
+import {MONTH_NAMES} from "../const.js";
 
 export const getRandomIntInclusive = (min, max) => {
   min = Math.ceil(min);
@@ -57,21 +52,3 @@ export const toggleRepeatClass = (isRepeatingTask) => {
 export const toggleDeadlineClass = (isExpired) => {
   return isExpired ? `card--deadline` : ``;
 };
-
-export const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-  return newElement.firstChild;
-};
-
-export const render = (container, element, place = RenderPosition.BEFOREEND) => {
-  switch (place) {
-    case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case RenderPosition.BEFOREEND:
-      container.append(element);
-      break;
-  }
-};
-
