@@ -38,11 +38,11 @@ export const formatTime = (date) => {
 };
 
 export const setFormatedDate = (isDateShowing, dueDate) => {
-  return isDateShowing ? `${dueDate.getDate()} ${MONTH_NAMES[dueDate.getMonth()]}` : ``;
+  return (isDateShowing && dueDate) ? `${dueDate.getDate()} ${MONTH_NAMES[dueDate.getMonth()]}` : ``;
 };
 
 export const setFormatedTime = (isDateShowing, dueDate) => {
-  return isDateShowing ? formatTime(dueDate) : ``;
+  return (isDateShowing && dueDate) ? formatTime(dueDate) : ``;
 };
 
 export const toggleRepeatClass = (isRepeatingTask) => {
