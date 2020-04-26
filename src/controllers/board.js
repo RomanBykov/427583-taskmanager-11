@@ -42,6 +42,7 @@ export default class BoardController {
 
     this._tasks = [];
     this._showedTaskControllers = [];
+
     this._showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
     this._noTaskComponent = new NoTasksComponent();
     this._tasksComponent = new TasksComponent();
@@ -102,7 +103,7 @@ export default class BoardController {
     this._loadMoreButtonComponent.setClickHandler(loadButtonClickHandler);
   }
 
-  _onDataChange(taskController, oldData, newData) {
+  _onDataChange(oldData, newData) {
     const index = this._tasks.findIndex((it) => it === oldData);
 
     if (index === -1) {
@@ -111,11 +112,11 @@ export default class BoardController {
 
     this._tasks = [].concat(this._tasks.slice(0, index), newData, this._tasks.slice(index + 1));
 
-    taskController.render(this._tasks[index]);
+    this._showedTaskControllers[index].render(this._tasks[index]);
   }
 
   _onViewChange() {
-    this._showedTaskControllers.forEach((task) => task.setDefaultView());
+    this._showedTaskControllers.forEach((it) => it.setDefaultView());
   }
 
   _sortTypeChangeHandler(sortType) {

@@ -29,6 +29,7 @@ export default class TaskController {
 
     const editButtonClickHandler = () => {
       this._replaceTaskToEdit();
+      document.addEventListener(`keydown`, this._escKeydownHandler);
     };
 
     const editFormSubmitHandler = (evt) => {
@@ -37,13 +38,13 @@ export default class TaskController {
     };
 
     const favoritesButtonClickHandler = () => {
-      this._onDataChange(this, task, Object.assign({}, task, {
+      this._onDataChange(task, Object.assign({}, task, {
         isFavorite: !task.isFavorite,
       }));
     };
 
     const archiveButtonClickHandler = () => {
-      this._onDataChange(this, task, Object.assign({}, task, {
+      this._onDataChange(task, Object.assign({}, task, {
         isArchive: !task.isArchive,
       }));
     };
@@ -62,8 +63,8 @@ export default class TaskController {
     }
   }
 
-  _setDefaultView() {
-    if (!this._mode !== Mode.DEFAULT) {
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
       this._replaceEditToTask();
     }
   }
@@ -76,8 +77,9 @@ export default class TaskController {
   }
 
   _replaceTaskToEdit() {
+    this._onViewChange();
     replace(this._taskEditComponent, this._taskComponent);
-    document.addEventListener(`keydown`, this._escKeydownHandler);
+    this._mode = Mode.EDIT;
   }
 
   _escKeydownHandler(evt) {
@@ -85,6 +87,7 @@ export default class TaskController {
 
     if (isEscKey) {
       this._replaceEditToTask();
+      document.removeEventListener(`keydown`, this._escKeydownHandler);
     }
   }
 }

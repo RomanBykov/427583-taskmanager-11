@@ -1,10 +1,6 @@
 import {DAYS, COLORS} from "../const.js";
-import {setFormatedTime, checkIfDateIsExpired, setFormatedDate, toggleRepeatClass, toggleDeadlineClass} from "../utils/common.js";
+import {setFormatedTime, isExpiredDate, setFormatedDate, toggleRepeatClass, toggleDeadlineClass, isRepeating, isShowingDate} from "../utils/common.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
-
-const isRepeating = (repeatDays) => {
-  return Object.values(repeatDays).some(Boolean);
-};
 
 const createColorsMarkup = (colors, currentColor) => {
   return colors.map((color, index) => {
@@ -53,22 +49,20 @@ const createTaskEditTemplate = (task, options = {}) => {
   const {description, dueDate, color} = task;
   const {isDateShowing, isRepeatingTask, activeRepeatingDays} = options;
 
-  const taskColor = description === `` ? COLORS[0] : color;
-
-  const isExpired = checkIfDateIsExpired(dueDate);
+  const isExpired = isExpiredDate(dueDate);
   const isBlockSaveButton = (isDateShowing && isRepeatingTask) || (isRepeatingTask && !isRepeating(activeRepeatingDays));
 
   const date = setFormatedDate(isDateShowing, dueDate);
   const time = setFormatedTime(isDateShowing, dueDate);
 
   const repeatingDaysMarkup = createRepeatingDaysMarkup(DAYS, activeRepeatingDays);
-  const colorsMarkup = createColorsMarkup(COLORS, taskColor);
+  const colorsMarkup = createColorsMarkup(COLORS, color);
 
   const repeatClass = toggleRepeatClass(isRepeatingTask);
   const deadlineClass = toggleDeadlineClass(isExpired);
 
   return (
-    `<article class="card card--edit card--${taskColor} ${repeatClass} ${deadlineClass}">
+    `<article class="card card--edit card--${color} ${repeatClass} ${deadlineClass}">
       <form class="card__form" method="get">
         <div class="card__inner">
 
@@ -143,18 +137,26 @@ export default class TaskEdit extends AbstractSmartComponent {
     super();
 
     this._task = task;
-    this._isDateShowing = !!task.dueDate;
-    this._isRepeatingTask = Object.values(task.repeatingDays).some(Boolean);
+    this._isDateShowing = isShowingDate(task.dueDate);
+    this._isRepeatingTask = isRepeating(task.repeatingDays);
     this._activeRepeatingDays = Object.assign({}, task.repeatDays);
 
     this._submitHandler = null;
 
-    this._subscribeOnEvetnts();
+    this._subscribeOnEvents();
   }
 
-  recoverListeners() {
+  getTemplate() {
+    return createTaskEditTemplate(this._task, {
+      isDateShowing: this._isDateShowing,
+      isRepeatingTask: this._isRepeatingTask,
+      activeRepeatingDays: this._activeRepeatingDays,
+    });
+  }
+
+  recoveryListeners() {
     this.setSubmitHandler(this._submitHandler);
-    this._subscribeOnEvetnts();
+    this._subscribeOnEvents();
   }
 
   rerender() {
@@ -164,27 +166,22 @@ export default class TaskEdit extends AbstractSmartComponent {
   reset() {
     const task = this._task;
 
-    this._isDateShowing = !!task.dueDate;
-    this._isRepeatingTask = Object.values(task.repeatingDays).some(Boolean);
+    this._isDateShowing = isShowingDate(task.dueDate);
+    this._isRepeatingTask = isRepeating(task.repeatingDays);
     this._activeRepeatingDays = Object.assign({}, task.repeatDays);
 
-    this.rerender();
-  }
 
-  getTemplate() {
-    return createTaskEditTemplate(this._task, {
-      isDateShowing: this._isDateShowing,
-      isRepeatingTask: this._isRepeatingTask,
-      activeRepeatingDays: this._activeRepeatingDays
-    });
+    this.rerender();
   }
 
   setSubmitHandler(handler) {
     this.getElement().querySelector(`form`)
       .addEventListener(`submit`, handler);
+
+    this._submitHandler = handler;
   }
 
-  _subscribeOnEvetnts() {
+  _subscribeOnEvents() {
     const element = this.getElement();
 
     element.querySelector(`.card__date-deadline-toggle`)
@@ -210,5 +207,13 @@ export default class TaskEdit extends AbstractSmartComponent {
         this.rerender();
       });
     }
+
+    const colors = element.querySelector(`.card__colors-wrap`);
+
+    colors.addEventListener(`change`, (evt) => {
+      this._task.color = evt.target.value;
+
+      this.rerender();
+    });
   }
 }

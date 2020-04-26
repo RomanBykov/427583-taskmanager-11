@@ -14,16 +14,8 @@ export const getRandomBoolean = () => {
   return Math.random() > 0.5;
 };
 
-export const checkIfDateIsExpired = (dueDate) => {
+export const isExpiredDate = (dueDate) => {
   return dueDate instanceof Date && dueDate < Date.now();
-};
-
-export const checkIfDateIsShowing = (dueDate) => {
-  return !!dueDate;
-};
-
-export const checkIfTaskIsRepeating = (description, repeatingDays) => {
-  return description ? Object.values(repeatingDays).some(Boolean) : false;
 };
 
 const castTimeFormat = (value) => {
@@ -51,4 +43,12 @@ export const toggleRepeatClass = (isRepeatingTask) => {
 
 export const toggleDeadlineClass = (isExpired) => {
   return isExpired ? `card--deadline` : ``;
+};
+
+export const isShowingDate = (dueDate) => {
+  return !!dueDate;
+};
+
+export const isRepeating = (repeatDays) => {
+  return Object.values(repeatDays).some(Boolean);
 };

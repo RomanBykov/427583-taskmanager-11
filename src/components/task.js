@@ -1,4 +1,4 @@
-import {setFormatedTime, checkIfDateIsExpired, checkIfDateIsShowing, setFormatedDate, checkIfTaskIsRepeating, toggleRepeatClass, toggleDeadlineClass} from "../utils/common.js";
+import {setFormatedTime, isExpiredDate, isShowingDate, setFormatedDate, isRepeating, toggleRepeatClass, toggleDeadlineClass} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
 
 
@@ -16,18 +16,18 @@ const createButtonMarkup = (name, isActive = true) => {
 const createTaskTemplate = (task) => {
   const {description, dueDate, color, repeatingDays} = task;
 
-  const isExpired = checkIfDateIsExpired(dueDate);
-  const isDateShowing = checkIfDateIsShowing(dueDate);
+  const isExpired = isExpiredDate(dueDate);
+  const isDateShowing = isShowingDate(dueDate);
 
   const date = setFormatedDate(isDateShowing, dueDate);
   const time = setFormatedTime(isDateShowing, dueDate);
 
-  const isRepeatingTask = checkIfTaskIsRepeating(description, repeatingDays);
+  const isRepeatingTask = isRepeating(repeatingDays);
   const repeatClass = toggleRepeatClass(isRepeatingTask);
   const deadlineClass = toggleDeadlineClass(isExpired);
 
   const editButton = createButtonMarkup(`edit`);
-  const archiveButton = createButtonMarkup(`archive`, !task.isActive);
+  const archiveButton = createButtonMarkup(`archive`, !task.isArchive);
   const favoritesButton = createButtonMarkup(`favorites`, !task.isFavorite);
 
   return (
