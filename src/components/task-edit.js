@@ -50,7 +50,7 @@ const createTaskEditTemplate = (task, options = {}) => {
   const {isDateShowing, isRepeatingTask, activeRepeatingDays} = options;
 
   const isExpired = isExpiredDate(dueDate);
-  const isBlockSaveButton = (isDateShowing && isRepeatingTask) || (isRepeatingTask && !isRepeating(activeRepeatingDays));
+  const isBlockSaveButton = isRepeatingTask && (isDateShowing || !isRepeating(activeRepeatingDays));
 
   const date = setFormatedDate(isDateShowing, dueDate);
   const time = setFormatedTime(isDateShowing, dueDate);
@@ -157,10 +157,6 @@ export default class TaskEdit extends AbstractSmartComponent {
   recoveryListeners() {
     this.setSubmitHandler(this._submitHandler);
     this._subscribeOnEvents();
-  }
-
-  rerender() {
-    super.rerender();
   }
 
   reset() {
