@@ -1,6 +1,6 @@
-import {setFormatedTime, isExpiredDate, isShowingDate, setFormatedDate, isRepeating, toggleRepeatClass, toggleDeadlineClass} from "../utils/common.js";
+import {isExpiredDate, isShowingDate, isRepeating, toggleRepeatClass, toggleDeadlineClass, formatDate, formatTime} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
-
+import {encode} from "he";
 
 const createButtonMarkup = (name, isActive = true) => {
   return (
@@ -14,21 +14,22 @@ const createButtonMarkup = (name, isActive = true) => {
 };
 
 const createTaskTemplate = (task) => {
-  const {description, dueDate, color, repeatingDays} = task;
+  const {description: notSanitizedDescription, dueDate, color, repeatingDays} = task;
 
   const isExpired = isExpiredDate(dueDate);
   const isDateShowing = isShowingDate(dueDate);
 
-  const date = setFormatedDate(isDateShowing, dueDate);
-  const time = setFormatedTime(isDateShowing, dueDate);
-
-  const isRepeatingTask = isRepeating(repeatingDays);
-  const repeatClass = toggleRepeatClass(isRepeatingTask);
-  const deadlineClass = toggleDeadlineClass(isExpired);
+  const date = isDateShowing ? formatDate(dueDate) : ``;
+  const time = isDateShowing ? formatTime(dueDate) : ``;
+  const description = encode(notSanitizedDescription);
 
   const editButton = createButtonMarkup(`edit`);
   const archiveButton = createButtonMarkup(`archive`, !task.isArchive);
   const favoritesButton = createButtonMarkup(`favorites`, !task.isFavorite);
+
+  const isRepeatingTask = isRepeating(repeatingDays);
+  const repeatClass = toggleRepeatClass(isRepeatingTask);
+  const deadlineClass = toggleDeadlineClass(isExpired);
 
   return (
     `<article class="card card--${color} ${repeatClass} ${deadlineClass}">

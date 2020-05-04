@@ -1,4 +1,4 @@
-import {MONTH_NAMES} from "../const.js";
+import moment from "moment";
 
 export const getRandomIntInclusive = (min, max) => {
   min = Math.ceil(min);
@@ -18,23 +18,12 @@ export const isExpiredDate = (dueDate) => {
   return dueDate instanceof Date && dueDate < Date.now();
 };
 
-const castTimeFormat = (value) => {
-  return value < 10 ? `0${value}` : String(value);
-};
-
 export const formatTime = (date) => {
-  const hours = castTimeFormat(date.getHours() % 12);
-  const minutes = castTimeFormat(date.getMinutes());
-
-  return `${hours}:${minutes}`;
+  return moment(date).format(`hh:mm`);
 };
 
-export const setFormatedDate = (isDateShowing, dueDate) => {
-  return (isDateShowing && dueDate) ? `${dueDate.getDate()} ${MONTH_NAMES[dueDate.getMonth()]}` : ``;
-};
-
-export const setFormatedTime = (isDateShowing, dueDate) => {
-  return (isDateShowing && dueDate) ? formatTime(dueDate) : ``;
+export const formatDate = (date) => {
+  return moment(date).format(`DD MMMM`);
 };
 
 export const toggleRepeatClass = (isRepeatingTask) => {
@@ -49,6 +38,16 @@ export const isShowingDate = (dueDate) => {
   return !!dueDate;
 };
 
-export const isRepeating = (repeatDays) => {
-  return Object.values(repeatDays).some(Boolean);
+export const isRepeating = (repeatingDays) => {
+  return Object.values(repeatingDays).some(Boolean);
+};
+
+export const isOverdueDate = (dueDate, date) => {
+  return dueDate < date && !isOneDay(date, dueDate);
+};
+
+export const isOneDay = (dateA, dateB) => {
+  const a = moment(dateA);
+  const b = moment(dateB);
+  return a.diff(b, `days`) === 0 && dateA.getDate() === dateB.getDate();
 };
